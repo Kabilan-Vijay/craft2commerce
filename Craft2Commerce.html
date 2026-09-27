@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Craft2Commerce helps independent artisans create product listings, find buyers, and sell handcrafted goods online.">
+<title>Craft2Commerce | Handmade, directly from the maker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #18231f;
+    --muted: #65716b;
+    --paper: #f5f5ef;
+    --surface: #fffefa;
+    --line: #dfe4dc;
+    --green: #236b4b;
+    --green-dark: #174d36;
+    --lime: #d8ee72;
+    --coral: #d66049;
+    --blue: #477a89;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+    --display: 'Manrope', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); line-height: 1.5; }
+  button, input, select, textarea { font: inherit; }
+  button { cursor: pointer; }
+  img { display: block; max-width: 100%; }
+  .topbar { position: sticky; top: 0; z-index: 20; background: rgba(255,254,250,.96); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px); }
+  .topbar-inner { max-width: 1320px; margin: auto; min-height: 72px; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font: 800 19px var(--display); white-space: nowrap; }
+  .brand-mark { width: 30px; height: 30px; background: var(--green); border-radius: 9px 9px 9px 2px; display: grid; place-items: center; color: var(--lime); font: 700 16px var(--mono); }
+  .nav-links { display: flex; gap: 8px; align-items: center; }
+  .nav-link { border: 0; background: transparent; color: var(--muted); padding: 9px 12px; border-radius: 7px; font-size: 13px; font-weight: 700; }
+  .nav-link.active, .nav-link:hover { color: var(--green-dark); background: #e9f1e9; }
+  .top-actions { display: flex; align-items: center; gap: 9px; }
+  .role-switch { display: flex; gap: 3px; padding: 3px; background: #eef0e9; border-radius: 8px; }
+  .role-switch button { border: 0; border-radius: 6px; padding: 7px 10px; background: transparent; color: var(--muted); font-size: 12px; font-weight: 700; }
+  .role-switch button.active { background: var(--surface); color: var(--green-dark); box-shadow: 0 1px 3px #18231f18; }
+  .icon-btn { position: relative; display: inline-grid; place-items: center; width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: var(--surface); }
+  .icon-btn svg { width: 19px; height: 19px; }
+  .cart-count { position: absolute; right: -5px; top: -6px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 20px; display: grid; place-items: center; color: var(--ink); background: var(--lime); font: 600 10px var(--mono); }
+  .page { max-width: 1320px; margin: auto; padding: 30px 32px 80px; }
+  .page-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin: 2px 0 22px; }
+  .eyebrow { color: var(--green); font: 600 11px var(--mono); text-transform: uppercase; margin: 0 0 7px; }
+  h1, h2, h3, p { margin-top: 0; }
+  h1 { font: 800 30px/1.15 var(--display); letter-spacing: 0; margin-bottom: 7px; }
+  .page-heading p:last-child { margin: 0; color: var(--muted); font-size: 14px; }
+  .heading-actions { display: flex; align-items: center; gap: 9px; }
+  .heading-actions [hidden] { display: none; }
+  .btn { border: 0; border-radius: 7px; min-height: 40px; padding: 10px 15px; display: inline-flex; justify-content: center; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; transition: transform .15s ease, background .15s ease; }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary { color: white; background: var(--green); }
+  .btn-primary:hover { background: var(--green-dark); }
+  .btn-ink { color: white; background: var(--ink); }
+  .btn-quiet { color: var(--ink); background: var(--surface); border: 1px solid var(--line); }
+  .btn-small { min-height: 34px; padding: 7px 11px; font-size: 12px; }
+  .intro-band { position: relative; overflow: hidden; min-height: 225px; margin: 0 0 26px; padding: 30px 34px; display: grid; grid-template-columns: minmax(0,1fr) minmax(240px,.8fr); align-items: center; gap: 30px; border-radius: 10px; background: var(--green-dark); color: white; }
+  .intro-band:after { content: ''; position: absolute; width: 330px; height: 330px; border: 1px solid #ffffff20; border-radius: 50%; right: 9%; top: -54%; box-shadow: 0 0 0 32px #ffffff09, 0 0 0 64px #ffffff07; pointer-events: none; }
+  .intro-copy { position: relative; z-index: 1; max-width: 610px; }
+  .intro-copy .eyebrow { color: var(--lime); }
+  .intro-copy h2 { font: 800 28px/1.18 var(--display); max-width: 530px; margin: 0 0 9px; }
+  .intro-copy p { max-width: 510px; margin: 0 0 17px; color: #d4e1d7; font-size: 13.5px; }
+  .intro-copy .btn { color: var(--ink); background: var(--lime); }
+  .intro-photo { position: relative; z-index: 1; justify-self: end; width: min(100%,360px); height: 170px; overflow: hidden; border-radius: 7px; background: #567b60; }
+  .intro-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .toolbar { display: grid; grid-template-columns: minmax(220px,1fr) 180px 180px; gap: 9px; margin: 0 0 17px; }
+  .search-wrap { display: flex; align-items: center; gap: 9px; padding: 0 12px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); }
+  .search-wrap svg { width: 17px; height: 17px; color: #8b9690; flex: none; }
+  .search-wrap input { min-width: 0; width: 100%; height: 40px; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 13px; }
+  .control { height: 42px; padding: 0 11px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); color: var(--ink); font-size: 12.5px; }
+  .category-row { display: flex; gap: 7px; overflow: auto; padding: 0 0 15px; scrollbar-width: none; }
+  .category-row::-webkit-scrollbar { display: none; }
+  .category-btn { flex: none; border: 1px solid var(--line); border-radius: 20px; padding: 7px 13px; background: var(--surface); color: #536059; font-size: 11.5px; font-weight: 700; }
+  .category-btn.active { color: white; background: var(--ink); border-color: var(--ink); }
+  .section-label { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 8px 0 13px; }
+  .section-label h2 { margin: 0; font: 800 17px var(--display); }
+  .section-label span { color: var(--muted); font-size: 12px; }
+  .product-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 15px; }
+  .product-card { overflow: hidden; min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; transition: transform .18s ease, box-shadow .18s ease; }
+  .product-card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px #18231f12; }
+  .product-image { position: relative; aspect-ratio: 1.22/1; overflow: hidden; background: #e6e6dc; cursor: pointer; }
+  .product-image img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+  .product-card:hover .product-image img { transform: scale(1.03); }
+  .image-tag { position: absolute; left: 9px; top: 9px; border-radius: 4px; background: var(--lime); color: var(--ink); padding: 4px 7px; font: 600 9px var(--mono); text-transform: uppercase; }
+  .product-info { padding: 12px; }
+  .product-info h3 { margin: 0 0 3px; font: 700 13px var(--display); }
+  .seller-line { margin: 0; color: var(--muted); font-size: 10.5px; }
+  .product-bottom { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 12px; }
+  .product-price { font: 600 14px var(--mono); }
+  .rating { color: #a36c14; font-size: 11px; font-weight: 700; white-space: nowrap; }
+  .product-actions { display: flex; gap: 6px; margin-top: 10px; }
+  .product-actions .btn { flex: 1; }
+  .empty-state { grid-column: 1/-1; padding: 42px 16px; color: var(--muted); text-align: center; background: var(--surface); border: 1px dashed var(--line); border-radius: 8px; }
+  .view { display: none; }
+  .view.active { display: block; animation: reveal .24s ease both; }
+  @keyframes reveal { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+  .work-grid { display: grid; grid-template-columns: minmax(0,1.15fr) minmax(300px,.85fr); align-items: start; gap: 18px; }
+  .panel { padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+  .panel + .panel { margin-top: 14px; }
+  .panel-head { display: flex; justify-content: space-between; align-items: start; gap: 15px; margin-bottom: 13px; }
+  .panel-head h2, .panel-head h3 { margin: 0; font: 800 16px var(--display); }
+  .panel-head p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+  .overline { color: var(--green); font: 600 10px var(--mono); text-transform: uppercase; }
+  .field-label { display: block; margin: 12px 0 5px; color: #47554d; font-size: 11.5px; font-weight: 700; }
+  .field { width: 100%; min-height: 40px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 6px; outline: none; background: white; color: var(--ink); font-size: 13px; }
+  .field:focus, .control:focus, .search-wrap:focus-within { border-color: var(--green); box-shadow: 0 0 0 3px #236b4b16; }
+  textarea.field { min-height: 88px; resize: vertical; }
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .file-drop { display: flex; align-items: center; gap: 12px; padding: 11px; background: #f5f7f2; border: 1px dashed #b9c7bb; border-radius: 6px; }
+  .file-drop input { max-width: 100%; font-size: 11px; }
+  .voice-line { display: flex; align-items: center; gap: 9px; margin-top: 9px; }
+  .voice-line .btn { flex: none; }
+  .voice-status { color: var(--muted); font-size: 11px; }
+  .voice-status.listening { color: var(--coral); }
+  .result-box { display: none; margin-top: 13px; padding: 13px; border-left: 3px solid var(--green); border-radius: 0 6px 6px 0; background: #eff5ec; font-size: 12px; }
+  .result-box.show { display: block; animation: reveal .2s ease; }
+  .result-box h4 { margin: 0 0 5px; font: 700 14px var(--display); }
+  .result-box p { margin: 0 0 7px; color: #4d5b52; }
+  .chips { display: flex; gap: 5px; flex-wrap: wrap; }
+  .chip { border-radius: 3px; padding: 3px 7px; color: var(--green-dark); background: #dfeadd; font: 500 9.5px var(--mono); }
+  .split-actions { display: flex; gap: 8px; margin-top: 12px; }
+  .split-actions .btn { flex: 1; }
+  .hint { margin: 8px 0 0; color: var(--muted); font-size: 10.5px; }
+  .price-output { display: none; margin-top: 13px; padding: 12px; border-radius: 6px; background: #f1f5e5; }
+  .price-output.show { display: block; }
+  .price-output strong { display: block; color: var(--green-dark); font: 700 18px var(--mono); }
+  .price-output span { color: var(--muted); font-size: 11px; }
+  .market-tools { margin-top: 15px; border-top: 1px solid var(--line); padding-top: 13px; }
+  .match-results { margin-top: 14px; }
+  .match-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .match-row:last-child { border-bottom: 0; }
+  .match-row strong { display: block; font-size: 12.5px; }
+  .match-row span { color: var(--muted); font-size: 10.5px; }
+  .match-score { flex: none; color: var(--green); font: 600 11px var(--mono); }
+  .story-layout { display: grid; grid-template-columns: minmax(0,1fr) 320px; gap: 20px; align-items: start; }
+  .reel-wrap { padding: 14px; background: var(--ink); border-radius: 8px; color: white; }
+  .reel-frame { position: relative; width: 100%; max-width: 230px; aspect-ratio: 9/16; margin: auto; overflow: hidden; border-radius: 6px; background: #294534; }
+  .reel-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(.62); }
+  .reel-overlay { position: absolute; inset: 0; padding: 18px; display: flex; flex-direction: column; justify-content: flex-end; background: linear-gradient(180deg,transparent 22%,#07130fc9); }
+  .reel-kicker { margin: 0 0 6px; color: var(--lime); font: 500 9px var(--mono); text-transform: uppercase; }
+  .reel-caption { margin: 0; font: 700 18px/1.2 var(--display); }
+  .reel-progress { height: 3px; margin-top: 12px; overflow: hidden; background: #ffffff40; }
+  .reel-progress span { display: block; height: 100%; width: 0; background: var(--lime); }
+  .storyboard { margin-top: 12px; }
+  .storyboard-item { display: grid; grid-template-columns: 46px 1fr; gap: 8px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 11px; }
+  .storyboard-item:last-child { border: 0; }
+  .storyboard-item time { color: var(--coral); font: 500 10px var(--mono); }
+  .storyboard-item p { margin: 0; color: var(--muted); }
+  .cart-backdrop { position: fixed; inset: 0; z-index: 40; display: none; justify-content: flex-end; background: #10191566; }
+  .cart-backdrop.show { display: flex; }
+  .cart-drawer { width: min(440px,100%); height: 100%; overflow-y: auto; padding: 23px; background: var(--surface); animation: drawer .2s ease; }
+  @keyframes drawer { from { transform: translateX(20px); opacity: .6; } to { transform: translateX(0); opacity: 1; } }
+  .cart-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .cart-head h2 { margin: 0; font: 800 19px var(--display); }
+  .cart-item { display: grid; grid-template-columns: 64px 1fr auto; align-items: center; gap: 11px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .cart-item img { width: 64px; height: 64px; object-fit: cover; border-radius: 5px; }
+  .cart-item h3 { margin: 0 0 3px; font-size: 12px; }
+  .cart-item p { margin: 0; color: var(--muted); font: 500 10px var(--mono); }
+  .qty-control { display: flex; align-items: center; gap: 7px; margin-top: 6px; }
+  .qty-control button { width: 22px; height: 22px; border: 1px solid var(--line); border-radius: 4px; background: white; }
+  .qty-control span { font: 500 11px var(--mono); }
+  .cart-price { font: 600 11px var(--mono); white-space: nowrap; }
+  .cart-summary { margin: 20px 0; padding: 14px; border-radius: 6px; background: #f3f5ed; }
+  .summary-row { display: flex; justify-content: space-between; margin: 5px 0; color: var(--muted); font-size: 12px; }
+  .summary-row.total { padding-top: 10px; border-top: 1px solid var(--line); color: var(--ink); font-weight: 700; }
+  .cart-empty { padding: 50px 12px; color: var(--muted); text-align: center; font-size: 13px; }
+  .toast { position: fixed; left: 50%; bottom: 24px; z-index: 100; max-width: calc(100% - 32px); padding: 11px 16px; border-radius: 6px; background: var(--ink); color: white; box-shadow: 0 8px 24px #0003; font-size: 12px; opacity: 0; pointer-events: none; transform: translate(-50%,12px); transition: .2s ease; }
+  .toast.show { opacity: 1; transform: translate(-50%,0); }
+  dialog { width: min(520px,calc(100% - 28px)); max-height: 88vh; padding: 0; border: 0; border-radius: 9px; color: var(--ink); background: var(--surface); box-shadow: 0 24px 80px #0004; }
+  dialog::backdrop { background: #10191599; backdrop-filter: blur(3px); }
+  .dialog-body { padding: 22px; }
+  .dialog-head { display: flex; justify-content: space-between; align-items: start; gap: 15px; }
+  .dialog-head h2 { margin: 0; font: 800 18px var(--display); }
+  .dialog-image { width: 100%; aspect-ratio: 16/9; margin: 15px 0; border-radius: 6px; object-fit: cover; background: #e8e9e1; }
+  .detail-meta { display: flex; gap: 12px; color: var(--muted); font-size: 11px; }
+  .detail-description { margin: 12px 0; color: #536159; font-size: 13px; }
+  .product-ai { margin-top: 17px; padding-top: 15px; border-top: 1px solid var(--line); }
+  .product-ai h3 { margin: 0 0 8px; font: 800 14px var(--display); }
+  .product-ai-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .product-ai-actions .btn { flex: 1; }
+  .product-ai .result-box { margin-top: 9px; }
+  .dialog-actions { display: flex; gap: 8px; margin-top: 16px; }
+  .dialog-actions .btn { flex: 1; }
+  @media (max-width: 1000px) {
+    .product-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+    .intro-band { grid-template-columns: 1fr .65fr; }
+    .nav-link { padding-inline: 8px; }
+  }
+  @media (max-width: 760px) {
+    .topbar-inner { min-height: 62px; padding: 0 17px; gap: 10px; }
+    .brand { font-size: 16px; gap: 7px; }
+    .brand-mark { width: 27px; height: 27px; }
+    .nav-links { gap: 0; }
+    .nav-link { padding: 8px 7px; font-size: 11px; }
+    .role-switch { display: none; }
+    .page { padding: 22px 17px 60px; }
+    .page-heading { align-items: start; flex-direction: column; gap: 12px; }
+    .heading-actions { width: 100%; }
+    .intro-band { min-height: 0; grid-template-columns: 1fr; gap: 16px; padding: 24px; }
+    .intro-copy h2 { font-size: 24px; }
+    .intro-photo { justify-self: stretch; width: 100%; height: 150px; }
+    .toolbar { grid-template-columns: 1fr 1fr; }
+    .search-wrap { grid-column: 1/-1; }
+    .product-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+    .product-info { padding: 10px; }
+    .product-actions { flex-direction: column; }
+    .work-grid, .story-layout { grid-template-columns: 1fr; }
+    .story-layout .reel-wrap { grid-row: 1; }
+    .reel-frame { max-width: 185px; }
+  }
+  @media (max-width: 420px) {
+    .topbar-inner { flex-wrap: wrap; padding-block: 9px; }
+    .top-actions { margin-left: auto; }
+    .nav-links { order: 3; width: 100%; justify-content: space-between; }
+    .nav-link { flex: 1; }
+    .page { padding-top: 18px; }
+    h1 { font-size: 26px; }
+    .field-grid { grid-template-columns: 1fr; gap: 0; }
+    .product-bottom { align-items: start; flex-direction: column; gap: 3px; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#marketplace" aria-label="Craft2Commerce home"><span class="brand-mark">C</span><span>Craft2Commerce</span></a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <button class="nav-link active" data-view="marketplace">Marketplace</button>
+      <button class="nav-link" data-view="studio">Seller studio</button>
+      <button class="nav-link" data-view="stories">Story maker</button>
+      <button class="nav-link" data-view="buyers">Buyer match</button>
+    </nav>
+    <div class="top-actions">
+      <div class="role-switch" aria-label="Marketplace role">
+        <button type="button" class="active" data-role="buyer">Buyer</button>
+        <button type="button" data-role="seller">Artisan</button>
+      </div>
+      <button type="button" class="icon-btn" id="openCart" aria-label="Open cart" title="Open cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.4L22 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <section class="page-heading">
+    <div><p class="eyebrow">A fairer way to trade handmade</p><h1>Craft2Commerce</h1><p>Discover independent makers, or bring your own craft to market.</p></div>
+    <div class="heading-actions">
+      <button type="button" class="btn btn-quiet" id="jumpToBuyers" data-role-action="buyer">Find wholesale buyers</button>
+      <button type="button" class="btn btn-primary" id="jumpToStudio" data-role-action="seller" hidden>Create a listing <span aria-hidden="true">↗</span></button>
+    </div>
+  </section>
+
+  <section class="view active" id="marketplaceView" aria-label="Marketplace">
+    <div class="intro-band">
+      <div class="intro-copy"><p class="eyebrow">Made by hand. Sold with purpose.</p><h2>Good work deserves a wider market.</h2><p>Meet the makers behind India's craft traditions. Buy one piece or start a wholesale conversation, directly with the artisan.</p><button type="button" class="btn" id="exploreCrafts">Explore the collection <span aria-hidden="true">↓</span></button></div>
+      <div class="intro-photo"><img src="https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=900&q=85" alt="Artisan hands working at a craft table" loading="eager"></div>
+    </div>
+    <div class="toolbar">
+      <label class="search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg><input id="searchInput" type="search" placeholder="Search craft, region, or maker" aria-label="Search marketplace"></label>
+      <select class="control" id="categoryFilter" aria-label="Filter by category"><option value="all">All categories</option><option>Pottery</option><option>Textiles</option><option>Jewellery</option><option>Decor</option></select>
+      <select class="control" id="sortFilter" aria-label="Sort products"><option value="popular">Most popular</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select>
+    </div>
+    <div class="category-row" id="categoryButtons" aria-label="Craft categories">
+      <button class="category-btn active" data-category="all">All crafts</button><button class="category-btn" data-category="Pottery">Pottery</button><button class="category-btn" data-category="Textiles">Textiles</button><button class="category-btn" data-category="Jewellery">Jewellery</button><button class="category-btn" data-category="Decor">Home &amp; decor</button>
+    </div>
+    <div class="section-label"><h2>From the maker's hands</h2><span id="productCount"></span></div>
+    <div class="product-grid" id="productGrid"></div>
+  </section>
+
+  <section class="view" id="studioView" aria-label="Seller studio">
+    <div class="page-heading"><div><p class="eyebrow">Seller studio</p><h1>Make your craft easier to find.</h1><p>Describe it, price it fairly, then publish a listing to the marketplace.</p></div></div>
+    <div class="work-grid">
+      <section class="panel">
+        <div class="panel-head"><div><span class="overline">01 / Product listing</span><h2 style="margin-top:5px">Tell us about your craft</h2><p>Start with a voice note or type a short description.</p></div><span class="chip">LOCAL DEMO</span></div>
+        <label class="field-label" for="listingName">Product name</label><input class="field" id="listingName" type="text" placeholder="e.g. Indigo cotton stole">
+        <div class="field-grid"><div><label class="field-label" for="listingCategory">Category</label><select class="field" id="listingCategory"><option>Textiles</option><option>Pottery</option><option>Jewellery</option><option>Decor</option></select></div><div><label class="field-label" for="listingRegion">Region / cluster</label><input class="field" id="listingRegion" type="text" placeholder="e.g. Bhuj, Gujarat"></div></div>
+        <div class="field-grid"><div><label class="field-label" for="listingSeller">Maker name</label><input class="field" id="listingSeller" type="text" value="Your studio"></div><div><label class="field-label" for="listingPrice">Price (₹)</label><input class="field" id="listingPrice" type="number" min="1" placeholder="Suggested below"></div></div>
+        <label class="field-label" for="listingDescription">Craft description</label><textarea class="field" id="listingDescription" placeholder="Materials, technique, time taken, and what makes this piece special"></textarea>
+        <div class="voice-line"><button class="btn btn-ink btn-small" type="button" id="listingMic" aria-label="Start voice input">◉ <span>Speak</span></button><select class="field" id="voiceLanguage" style="width:auto;min-height:34px;padding:5px 8px"><option value="en-IN">English</option><option value="hi-IN">हिन्दी</option><option value="gu-IN">ગુજરાતી</option><option value="ta-IN">தமிழ்</option><option value="bn-IN">বাংলা</option><option value="mr-IN">मराठी</option></select><span class="voice-status" id="voiceStatus">Voice input available in supported browsers</span></div>
+        <label class="field-label" for="listingPhoto">Product photo</label><div class="file-drop"><input id="listingPhoto" type="file" accept="image/*"><span class="voice-status" id="photoStatus">Optional · selected image stays on this device</span></div>
+        <div class="split-actions"><button type="button" class="btn btn-quiet" id="generateListing">Draft listing</button><button type="button" class="btn btn-primary" id="publishListing">Publish listing</button></div>
+        <div class="result-box" id="listingOutput"><h4 id="draftTitle"></h4><p id="draftDescription"></p><div class="chips" id="draftTags"></div></div>
+      </section>
+      <div>
+        <section class="panel">
+          <div class="panel-head"><div><span class="overline">02 / Fair pricing</span><h3 style="margin-top:5px">Price the work, not just materials.</h3><p>Include the hours that go into each piece.</p></div></div>
+          <div class="field-grid"><div><label class="field-label" for="materialCost">Material cost (₹)</label><input class="field" id="materialCost" type="number" min="0" value="450"></div><div><label class="field-label" for="workHours">Hours worked</label><input class="field" id="workHours" type="number" min="0" value="9"></div></div>
+          <label class="field-label" for="priceCategory">Craft category</label><select class="field" id="priceCategory"><option value="1.35">Textile &amp; weaving</option><option value="1.5">Pottery &amp; ceramics</option><option value="1.65">Metal &amp; jewellery</option><option value="1.4">Wood, decor &amp; other</option></select>
+          <button type="button" class="btn btn-primary" style="width:100%;margin-top:13px" id="calculatePrice">Suggest a fair price</button>
+          <div class="price-output" id="priceOutput"><strong id="priceRange"></strong><span id="priceReason"></span></div>
+          <p class="hint">This prototype uses a transparent sample formula, not live market data.</p>
+        </section>
+        <section class="panel market-tools"><span class="overline">03 / Image studio</span><h3 style="margin:5px 0 4px;font:800 15px var(--display)">Preview your product photo</h3><p style="margin:0;color:var(--muted);font-size:12px">Upload a photo above. The marketplace listing will use that image; image enhancement is not simulated.</p></section>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="storiesView" aria-label="Story maker">
+    <div class="page-heading"><div><p class="eyebrow">Story maker</p><h1>Give the craft its own voice.</h1><p>Build a short caption and storyboard for a product or social post.</p></div></div>
+    <div class="story-layout">
+      <section class="panel">
+        <div class="panel-head"><div><span class="overline">Cultural story builder</span><h2 style="margin-top:5px">Start with the maker's details</h2><p>Generated copy is a draft. Review cultural and craft details before sharing.</p></div></div>
+        <div class="field-grid"><div><label class="field-label" for="storyCraft">Craft</label><input class="field" id="storyCraft" value="Bandhani tie-dye"></div><div><label class="field-label" for="storyRegion">Region</label><input class="field" id="storyRegion" value="Kutch, Gujarat"></div></div>
+        <div class="field-grid"><div><label class="field-label" for="storyMaker">Maker name</label><input class="field" id="storyMaker" value="Lakshmi Ben"></div><div><label class="field-label" for="storyMood">Visual mood</label><select class="field" id="storyMood"><option value="heritage">Heritage</option><option value="festive">Festive</option><option value="modern">Modern</option></select></div></div>
+        <label class="field-label" for="storyNote">A detail worth including</label><textarea class="field" id="storyNote" placeholder="e.g. natural indigo, three generations of the family, three days per piece"></textarea>
+        <div class="split-actions"><button type="button" class="btn btn-primary" id="makeStory">Create story draft</button><button type="button" class="btn btn-quiet" id="speakStory">Read narration</button></div>
+        <div class="result-box show" id="storyOutput"><h4 id="storyTitle">Your story draft</h4><p id="storyCaption">Create a story to see its caption and storyboard here.</p><div class="chips" id="storyTags"></div></div>
+        <div class="storyboard" id="storyboard"></div>
+      </section>
+      <aside class="reel-wrap">
+        <div class="reel-frame" id="reelFrame"><img class="reel-image" id="reelImage" src="https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=600&q=80" alt="Craftsperson at work"><div class="reel-overlay"><p class="reel-kicker" id="reelKicker">Craft2Commerce · Maker story</p><p class="reel-caption" id="reelCaption">Every piece holds a story worth sharing.</p></div></div>
+        <div class="reel-progress"><span id="reelProgress"></span></div>
+        <button type="button" class="btn btn-quiet" style="width:100%;margin-top:12px;color:white;background:transparent;border-color:#ffffff55" id="playStory">▶ Play storyboard</button>
+      </aside>
+    </div>
+  </section>
+
+  <section class="view" id="buyersView" aria-label="Buyer matching">
+    <div class="page-heading"><div><p class="eyebrow">Wholesale connections</p><h1>Find buyers who fit your capacity.</h1><p>Match by craft category and order size, then start a quote conversation.</p></div></div>
+    <div class="work-grid">
+      <section class="panel">
+        <div class="panel-head"><div><span class="overline">Buyer matching</span><h2 style="margin-top:5px">Set your order details</h2><p>Results are sample marketplace profiles for this prototype.</p></div></div>
+        <div class="field-grid"><div><label class="field-label" for="matchCategory">Craft category</label><select class="field" id="matchCategory"><option>Textiles</option><option>Pottery</option><option>Jewellery</option><option>Decor</option></select></div><div><label class="field-label" for="matchQuantity">Order quantity</label><input class="field" id="matchQuantity" type="number" min="1" value="120"></div></div>
+        <button type="button" class="btn btn-primary" style="margin-top:14px" id="findBuyers">Find matching buyers</button>
+        <div class="match-results" id="matchResults"></div>
+      </section>
+      <aside class="panel"><span class="overline">Built for both sides</span><h2 style="margin:7px 0;font:800 20px var(--display)">From first introduction to a fair order.</h2><p style="color:var(--muted);font-size:13px">Artisans can share a listing and capacity; boutiques and retailers can discover makers by category and typical order size. Discuss samples, delivery, and payment terms directly before confirming an order.</p><div class="chips"><span class="chip">Retail orders</span><span class="chip">Wholesale quotes</span><span class="chip">Maker-first</span></div></aside>
+    </div>
+  </section>
+</main>
+
+<div class="cart-backdrop" id="cartBackdrop" aria-hidden="true">
+  <aside class="cart-drawer" aria-label="Shopping cart">
+    <div class="cart-head"><h2>Your cart</h2><button type="button" class="icon-btn" id="closeCart" aria-label="Close cart">×</button></div>
+    <div id="cartItems"></div>
+    <div class="cart-summary" id="cartSummary"></div>
+    <button type="button" class="btn btn-primary" style="width:100%" id="checkoutButton">Continue to checkout</button>
+    <p class="hint">Prototype checkout only. No payment is collected.</p>
+  </aside>
+</div>
+
+<dialog id="productDialog"><div class="dialog-body" id="productDialogBody"></div></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  const products = [
+    {id:1,name:'Bandhani Silk Stole',region:'Kutch, Gujarat',seller:'Lakshmi Ben Rabari',category:'Textiles',price:980,rating:4.9,popularity:10,description:'Hand tie-dyed silk with natural indigo, made using the Bandhani technique in Kutch.',image:'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?auto=format&fit=crop&w=900&q=85'},
+    {id:2,name:'Blue Pottery Vase',region:'Jaipur, Rajasthan',seller:'Mohan Lal Kumhar',category:'Pottery',price:1240,rating:4.8,popularity:9,description:'A hand-finished blue pottery vase made with traditional Jaipur techniques.',image:'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=900&q=85'},
+    {id:3,name:'Dhokra Metal Figurine',region:'Bastar, Chhattisgarh',seller:'Sukhram Ghadwa',category:'Jewellery',price:1650,rating:4.7,popularity:7,description:'A small lost-wax cast Dhokra figure made by Bastar artisans.',image:'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=900&q=85'},
+    {id:4,name:'Terracotta Wall Panel',region:'Molela, Rajasthan',seller:'Dinesh Kumhar',category:'Decor',price:2100,rating:4.9,popularity:8,description:'Hand-moulded terracotta relief inspired by the storytelling panels of Molela.',image:'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=900&q=85'},
+    {id:5,name:'Kalamkari Cotton Runner',region:'Srikalahasti, Andhra Pradesh',seller:'Padma Sree',category:'Textiles',price:1450,rating:4.8,popularity:6,description:'Cotton table runner with hand-drawn Kalamkari motifs and natural colours.',image:'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=900&q=85'},
+    {id:6,name:'Silver Filigree Earrings',region:'Cuttack, Odisha',seller:'Bijay Maharana',category:'Jewellery',price:2450,rating:4.9,popularity:9,description:'Lightweight silver earrings shaped using the fine filigree craft of Cuttack.',image:'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=85'},
+    {id:7,name:'Channapatna Toy Set',region:'Channapatna, Karnataka',seller:'Ravi Shilpi',category:'Decor',price:760,rating:4.8,popularity:8,description:'A set of turned wooden toys finished in bright colours by a Channapatna maker.',image:'https://images.unsplash.com/photo-1599623560574-39d485900c95?auto=format&fit=crop&w=900&q=85'},
+    {id:8,name:'Longpi Black Pottery Bowl',region:'Ukhrul, Manipur',seller:'Chonpi Kasar',category:'Pottery',price:1180,rating:4.7,popularity:5,description:'A hand-shaped black pottery bowl made in the Longpi tradition of Manipur.',image:'https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?auto=format&fit=crop&w=900&q=85'}
+  ];
+  const savedProductsKey = 'craft2commerce-created-products';
+  try {
+    const savedProducts = JSON.parse(localStorage.getItem(savedProductsKey) || '[]');
+    if (Array.isArray(savedProducts)) products.unshift(...savedProducts.filter(product => product && product.isUserCreated && product.id && product.name && product.category && product.price));
+  } catch (error) {
+    localStorage.removeItem(savedProductsKey);
+  }
+  const buyers = [
+    {name:'Anokhi Retail Collective',category:'Textiles',min:50,max:500,region:'Jaipur'},
+    {name:'Craftsbridge Exports',category:'Textiles',min:100,max:1000,region:'Mumbai'},
+    {name:'Studio Mitti',category:'Pottery',min:20,max:200,region:'Delhi'},
+    {name:'Terra & Co. Home',category:'Pottery',min:80,max:600,region:'Bengaluru'},
+    {name:'Silverleaf Jewels',category:'Jewellery',min:30,max:300,region:'Kolkata'},
+    {name:'Heritage Adornments',category:'Jewellery',min:60,max:400,region:'Hyderabad'},
+    {name:'Common Ground Home',category:'Decor',min:25,max:240,region:'Pune'},
+    {name:'The Living Edit',category:'Decor',min:60,max:450,region:'Delhi'}
+  ];
+  let activeCategory = 'all';
+  let cart = [];
+  let listingImage = '';
+  let currentStory = '';
+  let storyTimer = null;
+  let toastTimer = null;
+
+  const money = value => '₹' + Number(value).toLocaleString('en-IN');
+  const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const toast = message => {
+    const node = document.getElementById('toast');
+    node.textContent = message;
+    node.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => node.classList.remove('show'), 2600);
+  };
+
+  function setView(name) {
+    document.querySelectorAll('.view').forEach(view => view.classList.toggle('active', view.id === name + 'View'));
+    document.querySelectorAll('.nav-link').forEach(link => link.classList.toggle('active', link.dataset.view === name));
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.querySelectorAll('.nav-link').forEach(link => link.addEventListener('click', () => setView(link.dataset.view)));
+  document.getElementById('jumpToStudio').addEventListener('click', () => setView('studio'));
+  document.getElementById('jumpToBuyers').addEventListener('click', () => setView('buyers'));
+  document.getElementById('exploreCrafts').addEventListener('click', () => document.getElementById('searchInput').focus());
+  document.querySelectorAll('[data-role]').forEach(button => button.addEventListener('click', () => {
+    document.querySelectorAll('[data-role]').forEach(item => item.classList.toggle('active', item === button));
+    document.querySelectorAll('[data-role-action]').forEach(action => { action.hidden = action.dataset.roleAction !== button.dataset.role; });
+    toast(button.dataset.role === 'seller' ? 'Create and publish your craft listing.' : 'Find wholesale buyers by category and order size.');
+  }));
+
+  function renderProducts() {
+    const query = document.getElementById('searchInput').value.trim().toLowerCase();
+    const selectedCategory = document.getElementById('categoryFilter').value;
+    const sort = document.getElementById('sortFilter').value;
+    let list = products.filter(product => (activeCategory === 'all' || product.category === activeCategory) && (selectedCategory === 'all' || product.category === selectedCategory) && (!query || [product.name,product.region,product.seller,product.category].join(' ').toLowerCase().includes(query)));
+    if (sort === 'low') list.sort((a,b) => a.price-b.price);
+    else if (sort === 'high') list.sort((a,b) => b.price-a.price);
+    else list.sort((a,b) => b.popularity-a.popularity);
+    document.getElementById('productCount').textContent = `${list.length} ${list.length === 1 ? 'piece' : 'pieces'}`;
+    document.getElementById('productGrid').innerHTML = list.length ? list.map(product => `
+      <article class="product-card">
+        <div class="product-image" data-product="${product.id}" role="button" tabindex="0" aria-label="View ${escapeHTML(product.name)}"><img src="${escapeHTML(product.image)}" alt="${escapeHTML(product.name)}" loading="lazy"><span class="image-tag">${escapeHTML(product.category)}</span></div>
+        <div class="product-info"><h3>${escapeHTML(product.name)}</h3><p class="seller-line">${escapeHTML(product.seller)} · ${escapeHTML(product.region)}</p>
+          <div class="product-bottom"><span class="product-price">${money(product.price)}</span><span class="rating">★ ${product.rating}</span></div>
+          <div class="product-actions"><button type="button" class="btn btn-quiet btn-small" data-detail="${product.id}">Details</button><button type="button" class="btn btn-primary btn-small" data-add="${product.id}">Add to cart</button></div>
+        </div>
+      </article>`).join('') : '<div class="empty-state">No crafts match those filters. Try another search or category.</div>';
+    document.querySelectorAll('[data-add]').forEach(button => button.addEventListener('click', () => addToCart(Number(button.dataset.add))));
+    document.querySelectorAll('[data-detail], [data-product]').forEach(button => button.addEventListener('click', () => showProduct(Number(button.dataset.detail || button.dataset.product))));
+    document.querySelectorAll('[data-product]').forEach(node => node.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); showProduct(Number(node.dataset.product)); } }));
+  }
+  document.getElementById('searchInput').addEventListener('input', renderProducts);
+  document.getElementById('categoryFilter').addEventListener('change', event => {
+    activeCategory = event.target.value;
+    document.querySelectorAll('[data-category]').forEach(item => item.classList.toggle('active',item.dataset.category === activeCategory));
+    renderProducts();
+  });
+  document.getElementById('sortFilter').addEventListener('change', renderProducts);
+  document.querySelectorAll('[data-category]').forEach(button => button.addEventListener('click', () => {
+    activeCategory = button.dataset.category;
+    document.querySelectorAll('[data-category]').forEach(item => item.classList.toggle('active', item === button));
+    document.getElementById('categoryFilter').value = 'all';
+    renderProducts();
+  }));
+
+  function showProduct(id) {
+    const product = products.find(item => item.id === id);
+    if (!product) return;
+    document.getElementById('productDialogBody').innerHTML = `
+      <div class="dialog-head"><div><p class="eyebrow">${escapeHTML(product.category)} · Maker profile</p><h2>${escapeHTML(product.name)}</h2></div><button type="button" class="icon-btn" onclick="document.getElementById('productDialog').close()" aria-label="Close details">×</button></div>
+      <img class="dialog-image" src="${escapeHTML(product.image)}" alt="${escapeHTML(product.name)}">
+      <div class="detail-meta"><span>By ${escapeHTML(product.seller)}</span><span>${escapeHTML(product.region)}</span><span>★ ${product.rating}</span></div>
+      <p class="detail-description">${escapeHTML(product.description)}</p><strong class="product-price">${money(product.price)}</strong>
+      <section class="product-ai">
+        <h3>AI listing tools</h3>
+        <label class="field-label" for="productLanguage">Draft language</label>
+        <select class="field" id="productLanguage"><option value="English">English</option><option value="Hindi">हिन्दी</option><option value="Gujarati">ગુજરાતી</option><option value="Tamil">தமிழ்</option><option value="Bengali">বাংলা</option><option value="Marathi">मराठी</option></select>
+        <div class="product-ai-actions"><button type="button" class="btn btn-quiet btn-small" id="generateProductDescription">Auto description</button><button type="button" class="btn btn-quiet btn-small" id="generateProductStory">Maker story</button></div>
+        <p class="hint" id="productModelStatus">Drafts use an open multilingual model through the app server. Product details are sent to the configured model provider when you generate copy.</p>
+        <p class="hint">AI drafts may be inaccurate. Check every detail against the maker's actual product before using them.</p>
+        <div class="result-box" id="productDescriptionResult"><h4>Product description</h4><p id="productDescriptionText"></p></div>
+        <div class="result-box" id="productStoryResult"><h4>Maker story</h4><p id="productStoryText"></p></div>
+      </section>
+      <div class="dialog-actions"><button type="button" class="btn btn-quiet" onclick="requestQuote(${id})">Request a bulk quote</button><button type="button" class="btn btn-primary" onclick="addToCart(${id});document.getElementById('productDialog').close()">Add to cart</button></div>`;
+    document.getElementById('productDialog').showModal();
+    document.getElementById('generateProductDescription').addEventListener('click', () => generateProductCopy(product, 'description'));
+    document.getElementById('generateProductStory').addEventListener('click', () => generateProductCopy(product, 'story'));
+  }
+
+  async function generateProductCopy(product, kind) {
+    const status = document.getElementById('productModelStatus');
+    const button = document.getElementById(kind === 'description' ? 'generateProductDescription' : 'generateProductStory');
+    const output = document.getElementById(kind === 'description' ? 'productDescriptionText' : 'productStoryText');
+    const result = document.getElementById(kind === 'description' ? 'productDescriptionResult' : 'productStoryResult');
+    const language = document.getElementById('productLanguage').value;
+    if (location.protocol === 'file:') {
+      status.textContent = 'Start the Craft2Commerce Node server to use secure multilingual AI drafts.';
+      result.classList.remove('show');
+      return;
+    }
+    button.disabled = true;
+    status.textContent = 'Preparing a draft with the hosted open model…';
+    try {
+      const response = await fetch('/api/draft', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({kind,language,product:{name:product.name,category:product.category,seller:product.seller,region:product.region,description:product.description}})
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'The model request failed.');
+      output.textContent = data.draft;
+      result.classList.add('show');
+      status.textContent = 'Draft ready. Review it for accuracy before sharing.';
+    } catch (error) {
+      status.textContent = error.message;
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  function addToCart(id) {
+    const product = products.find(item => item.id === id);
+    if (!product) return;
+    const item = cart.find(entry => entry.id === id);
+    if (item) item.quantity += 1;
+    else cart.push({...product,quantity:1});
+    renderCart();
+    toast(`${product.name} added to cart.`);
+  }
+  function changeQuantity(id, delta) {
+    const item = cart.find(entry => entry.id === id);
+    if (!item) return;
+    item.quantity += delta;
+    if (item.quantity <= 0) cart = cart.filter(entry => entry.id !== id);
+    renderCart();
+  }
+  function renderCart() {
+    const count = cart.reduce((sum,item) => sum + item.quantity,0);
+    const subtotal = cart.reduce((sum,item) => sum + item.price * item.quantity,0);
+    document.getElementById('cartCount').textContent = count;
+    document.getElementById('cartItems').innerHTML = cart.length ? cart.map(item => `
+      <div class="cart-item"><img src="${escapeHTML(item.image)}" alt=""><div><h3>${escapeHTML(item.name)}</h3><p>${escapeHTML(item.seller)}</p><div class="qty-control"><button type="button" aria-label="Remove one ${escapeHTML(item.name)}" onclick="changeQuantity(${item.id},-1)">−</button><span>${item.quantity}</span><button type="button" aria-label="Add one ${escapeHTML(item.name)}" onclick="changeQuantity(${item.id},1)">+</button></div></div><span class="cart-price">${money(item.price * item.quantity)}</span></div>`).join('') : '<div class="cart-empty">Your cart is empty.<br>Find a piece made for you.</div>';
+    document.getElementById('cartSummary').innerHTML = `<div class="summary-row"><span>Subtotal</span><span>${money(subtotal)}</span></div><div class="summary-row"><span>Delivery estimate</span><span>${cart.length ? money(50) : money(0)}</span></div><div class="summary-row total"><span>Estimated total</span><span>${money(subtotal + (cart.length ? 50 : 0))}</span></div>`;
+    document.getElementById('checkoutButton').disabled = !cart.length;
+    document.getElementById('checkoutButton').style.opacity = cart.length ? '1' : '.55';
+  }
+  function openCart() { document.getElementById('cartBackdrop').classList.add('show'); document.getElementById('cartBackdrop').setAttribute('aria-hidden','false'); }
+  function closeCart() { document.getElementById('cartBackdrop').classList.remove('show'); document.getElementById('cartBackdrop').setAttribute('aria-hidden','true'); }
+  document.getElementById('openCart').addEventListener('click',openCart);
+  document.getElementById('closeCart').addEventListener('click',closeCart);
+  document.getElementById('cartBackdrop').addEventListener('click',event => { if (event.target.id === 'cartBackdrop') closeCart(); });
+  document.getElementById('checkoutButton').addEventListener('click',() => {
+    if (!cart.length) return;
+    const total = cart.reduce((sum,item) => sum + item.price * item.quantity,0) + 50;
+    cart = [];
+    renderCart();
+    closeCart();
+    toast(`Demo order placed for ${money(total)}. No payment was collected.`);
+  });
+  window.changeQuantity = changeQuantity;
+  window.addToCart = addToCart;
+  window.requestQuote = id => {
+    const product = products.find(item => item.id === id);
+    if (!product) return;
+    if (document.getElementById('productDialog').open) document.getElementById('productDialog').close();
+    toast(`Quote request drafted for ${product.seller}. Contact and delivery details are not sent in this demo.`);
+  };
+
+  function wordsFromDescription(text) {
+    return text.split(/[,.\n]+/).map(word => word.trim()).filter(Boolean);
+  }
+  function draftListing() {
+    const description = document.getElementById('listingDescription').value.trim();
+    if (!description) { toast('Describe the craft first, by typing or voice.'); return; }
+    const words = wordsFromDescription(description);
+    const titleInput = document.getElementById('listingName').value.trim();
+    const title = titleInput || words.slice(0,3).join(' ').replace(/^\w/, letter => letter.toUpperCase());
+    document.getElementById('draftTitle').textContent = title;
+    document.getElementById('draftDescription').textContent = `${description} Hand-finished by an independent maker.`;
+    document.getElementById('draftTags').innerHTML = [...new Set([...words.slice(0,3),'handmade','artisan-made'])].slice(0,5).map(tag => `<span class="chip">${escapeHTML(tag)}</span>`).join('');
+    document.getElementById('listingOutput').classList.add('show');
+    document.getElementById('listingName').value = title;
+  }
+  document.getElementById('generateListing').addEventListener('click',draftListing);
+  document.getElementById('listingPhoto').addEventListener('change',event => {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    if (listingImage) URL.revokeObjectURL(listingImage);
+    listingImage = URL.createObjectURL(file);
+    document.getElementById('photoStatus').textContent = file.name;
+  });
+  document.getElementById('publishListing').addEventListener('click',() => {
+    const name = document.getElementById('listingName').value.trim();
+    const description = document.getElementById('listingDescription').value.trim();
+    const price = Number(document.getElementById('listingPrice').value) || 0;
+    if (!name || !description || price <= 0) { toast('Add a product name, description, and price before publishing.'); return; }
+    const category = document.getElementById('listingCategory').value;
+    const safeFallback = 'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=900&q=85';
+    const newProduct = {id:Date.now(),name,region:document.getElementById('listingRegion').value.trim() || 'India',seller:document.getElementById('listingSeller').value.trim() || 'Independent maker',category,price,rating:5,popularity:11,description,image:listingImage || safeFallback,isNew:true,isUserCreated:true};
+    products.unshift(newProduct);
+    try {
+      const savedProducts = products.filter(product => product.isUserCreated).map(product => ({...product,image:product.image.startsWith('blob:') ? safeFallback : product.image}));
+      localStorage.setItem(savedProductsKey,JSON.stringify(savedProducts));
+    } catch (error) {
+      toast('Listing published for this session. Browser storage was unavailable.');
+    }
+    document.getElementById('searchInput').value = '';
+    document.getElementById('categoryFilter').value = 'all';
+    activeCategory = 'all';
+    document.querySelectorAll('[data-category]').forEach(item => item.classList.toggle('active',item.dataset.category === 'all'));
+    renderProducts();
+    setView('marketplace');
+    toast(`${name} is now in the marketplace.`);
+  });
+  document.getElementById('calculatePrice').addEventListener('click',() => {
+    const cost = Math.max(0,Number(document.getElementById('materialCost').value) || 0);
+    const hours = Math.max(0,Number(document.getElementById('workHours').value) || 0);
+    const multiplier = Number(document.getElementById('priceCategory').value) || 1.4;
+    const base = (cost + hours * 60) * multiplier;
+    const low = Math.round(base * .92 / 10) * 10;
+    const high = Math.round(base * 1.15 / 10) * 10;
+    document.getElementById('priceRange').textContent = `${money(low)} – ${money(high)}`;
+    document.getElementById('priceReason').textContent = `Includes ${money(cost)} in materials and ${hours} hours of craft labor at ₹60/hour.`;
+    document.getElementById('priceOutput').classList.add('show');
+    if (!document.getElementById('listingPrice').value) document.getElementById('listingPrice').value = Math.round(base / 10) * 10;
+  });
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let recognition = null;
+  document.getElementById('listingMic').addEventListener('click',() => {
+    const status = document.getElementById('voiceStatus');
+    if (!SpeechRecognition) { status.textContent = 'Voice input is unavailable here. Type your description instead.'; return; }
+    if (recognition) { recognition.stop(); return; }
+    recognition = new SpeechRecognition();
+    recognition.lang = document.getElementById('voiceLanguage').value;
+    recognition.interimResults = true;
+    recognition.continuous = false;
+    const description = document.getElementById('listingDescription');
+    const initialText = description.value.trim();
+    recognition.onstart = () => { status.textContent = 'Listening…'; status.classList.add('listening'); document.getElementById('listingMic').querySelector('span').textContent = 'Stop'; };
+    recognition.onresult = event => {
+      let transcript = '';
+      for (let index = event.resultIndex; index < event.results.length; index++) transcript += event.results[index][0].transcript;
+      description.value = [initialText,transcript.trim()].filter(Boolean).join(' ');
+    };
+    recognition.onerror = event => { status.textContent = `Microphone error (${event.error}). You can type instead.`; };
+    recognition.onend = () => { recognition = null; status.textContent = description.value ? 'Transcript ready. Review it before publishing.' : 'Voice input available in supported browsers'; status.classList.remove('listening'); document.getElementById('listingMic').querySelector('span').textContent = 'Speak'; };
+    recognition.start();
+  });
+
+  function matchBuyers() {
+    const category = document.getElementById('matchCategory').value;
+    const quantity = Math.max(0,Number(document.getElementById('matchQuantity').value) || 0);
+    const results = buyers.filter(buyer => buyer.category === category).map(buyer => {
+      const fits = quantity >= buyer.min && quantity <= buyer.max;
+      const distance = quantity < buyer.min ? buyer.min - quantity : quantity > buyer.max ? quantity - buyer.max : 0;
+      const score = Math.max(55,Math.min(98,Math.round((fits ? 92 : 78) - distance / Math.max(buyer.max,1) * 30)));
+      return {...buyer,score};
+    }).sort((a,b) => b.score-a.score);
+    document.getElementById('matchResults').innerHTML = results.length ? results.map(buyer => `<div class="match-row"><div><strong>${escapeHTML(buyer.name)}</strong><span>${escapeHTML(buyer.region)} · typical order ${buyer.min}–${buyer.max} units</span></div><span class="match-score">${buyer.score}% fit</span></div>`).join('') : '<p class="hint">No sample buyers in this category yet.</p>';
+  }
+  document.getElementById('findBuyers').addEventListener('click',matchBuyers);
+  document.getElementById('matchCategory').addEventListener('change',matchBuyers);
+
+  function createStory() {
+    const craft = document.getElementById('storyCraft').value.trim() || 'this craft';
+    const region = document.getElementById('storyRegion').value.trim() || 'India';
+    const maker = document.getElementById('storyMaker').value.trim() || 'the maker';
+    const detail = document.getElementById('storyNote').value.trim();
+    const lines = [`In ${region}, ${craft} carries a story shaped by hand.`, `${maker} brings patience and skill to every piece.`, detail ? detail.replace(/[.!?]+$/,'') + '.' : 'Small differences make each piece its own.', `Take home a piece of ${region}'s living craft.`];
+    currentStory = lines.join(' ');
+    document.getElementById('storyTitle').textContent = `${craft} · ${region}`;
+    document.getElementById('storyCaption').textContent = currentStory;
+    const tagCraft = craft.replace(/[^\p{L}\p{N}]+/gu,'');
+    const tagRegion = region.split(',')[0].replace(/[^\p{L}\p{N}]+/gu,'');
+    document.getElementById('storyTags').innerHTML = [`#${tagCraft}`,'#handmade','#slowcraft',`#${tagRegion}`].map(tag => `<span class="chip">${escapeHTML(tag)}</span>`).join('');
+    document.getElementById('reelCaption').textContent = lines[0];
+    const palette = {heritage:['#263e36','#b58a55'],festive:['#9e473a','#d8a849'],modern:['#375a62','#9db9a6']}[document.getElementById('storyMood').value];
+    document.getElementById('reelFrame').style.background = `linear-gradient(145deg,${palette[0]},${palette[1]})`;
+    document.getElementById('storyboard').innerHTML = lines.map((line,index) => `<div class="storyboard-item"><time>${index * 4}s</time><p><strong>Shot ${index + 1}</strong><br>${escapeHTML(line)}</p></div>`).join('');
+  }
+  document.getElementById('makeStory').addEventListener('click',createStory);
+  function narrateStory() {
+    if (!currentStory) createStory();
+    if (!('speechSynthesis' in window)) { toast('Narration is not supported in this browser.'); return; }
+    window.speechSynthesis.cancel();
+    const voice = new SpeechSynthesisUtterance(currentStory);
+    voice.lang = document.getElementById('voiceLanguage').value;
+    voice.rate = .95;
+    window.speechSynthesis.speak(voice);
+  }
+  document.getElementById('speakStory').addEventListener('click',narrateStory);
+  document.getElementById('playStory').addEventListener('click',() => {
+    if (!currentStory) createStory();
+    clearInterval(storyTimer);
+    const progress = document.getElementById('reelProgress');
+    const caption = document.getElementById('reelCaption');
+    const lines = [...document.querySelectorAll('.storyboard-item p')].map(node => node.textContent.replace(/^Shot \d+/,'').trim());
+    let step = 0;
+    progress.style.width = '0%';
+    narrateStory();
+    storyTimer = setInterval(() => {
+      step++;
+      caption.textContent = lines[Math.min(step,lines.length - 1)] || currentStory;
+      progress.style.width = `${Math.min(step / lines.length * 100,100)}%`;
+      if (step >= lines.length) clearInterval(storyTimer);
+    },1800);
+  });
+
+  renderProducts();
+  renderCart();
+  matchBuyers();
+  createStory();
+</script>
+</body>
+</html>
